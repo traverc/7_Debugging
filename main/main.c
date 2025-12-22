@@ -4,7 +4,7 @@
 #include "driver/gpio.h"
 
 #define LED_PIN  10 
-#define DELAY_MS 00
+#define DELAY_MS 500
 
 void app_main(void)
 {
@@ -25,6 +25,10 @@ void app_main(void)
          counter++;
 
         vTaskDelay(DELAY_MS / portTICK_PERIOD_MS);
+
+        if (counter % 5 == 0) {
+            printf("LED toggled 5 times! \n");
+        }
     }
 }
 
