@@ -4,7 +4,7 @@
 #include "driver/gpio.h"
 
 #define LED_PIN  10 
-#define DELAY_MS 500
+#define DELAY_MS 00
 
 void app_main(void)
 {
@@ -22,7 +22,7 @@ void app_main(void)
             gpio_set_level(LED_PIN, 0);
 
         // Intentional bug: counter not incremented
-        // counter++;
+         counter++;
 
         vTaskDelay(DELAY_MS / portTICK_PERIOD_MS);
     }
