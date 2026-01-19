@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+
+#define LED_PIN         10
+#define BASE_DELAY_MS   500
+#define BLINKS_PER_STEP 10
+#define MAX_STEPS       5
+
+void app_main(void)
+{
+    gpio_reset_pin(LED_PIN);
+    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+
+    int blink_count = 0;
+    int step_count = 0;
+    int delay_ms = BASE_DELAY_MS;
+    int slowing_down = 1;     // 1 = slowing down, 0 = speeding up
+    int led_state = 0;
+
+    printf("Starting LED blink pattern\n");
+
+    while (1) {
+
+        // Toggle LED
+        led_state = !led_state;
+        gpio_set_level(LED_PIN, led_state);
+
+        blink_count++;
+
+        printf("Blink %d | Step %d | Delay %d ms\n",
+               blink_count, step_count, delay_ms);
+
+        // Change blink rate after BLINKS_PER_STEP blinks
+        if (blink_count == BLINKS_PER_STEP) {
+
+            blink_count = 0;
+
+            if (slowing_down) {
+                delay_ms += 500;
+                step_count++;
+                printf("LED will blink SLOWER next\n");
+            } else {
+                delay_ms -= 500;
+                printf("LED will blink FASTER next\n");
+            }
+
+            if (step_count >= MAX_STEPS) {
+                slowing_down = 0;
+            }
+
+            if (step_count <= 0) {
+                slowing_down = 1;
+            }
+            gpio_set_level(LED_PIN, !led_state);
+        }
+
+        if (blink_count == 0) {
+            led_state = 0;
+        }
+        
+        if (delay_ms == BASE_DELAY_MS) {
+            slowing_down = 1;
+        }
+
+        vTaskDelay(delay_ms / portTICK_PERIOD_MS);
+    }
+}
+
+
+
