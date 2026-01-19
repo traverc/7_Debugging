@@ -2,31 +2,31 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include <math.h>
 
-#define LED_PIN  10 
 #define DELAY_MS 500
 
 void app_main(void)
 {
-    gpio_reset_pin(LED_PIN);
-    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
-
-    int counter = 0;
-
-    while (1) {
-        printf("Toggling LED... Counter = %d\n", counter);
-
-        if (counter % 2 == 0)
-            gpio_set_level(LED_PIN, 1);
-        else
-            gpio_set_level(LED_PIN, 0);
-
-        // Intentional bug: counter not incremented
-        // counter++;
-
-        vTaskDelay(DELAY_MS / portTICK_PERIOD_MS);
+    int x[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+   
+    int n_evens = 0;        // Number of evens
+    int n_odds = 0;         // Number of odds
+    int i;                  // Loop index
+   
+    for (
+        i = 0;
+        i < 10;
+        i++
+    ) {
+       
+        if (x[i] % 2 == 0){
+            n_evens++;
+        } else {
+            n_odds++;
+        }
+       
     }
+   
+    printf("Number of evens = %d\nNumber of odds = %d\n", n_evens, n_odds);
 }
-
-
-
